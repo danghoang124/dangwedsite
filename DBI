@@ -1,0 +1,77 @@
+create database AppgiaohangAhang
+go
+use Appgiaohang
+go
+create table SUPPLIERS(
+    source_ID INT primary key,
+    source_name Varchar(50),
+    contact_info varchar(50),
+    [address] text
+)
+create table SELLERS(
+    Seller_ID INT Primary key,
+    Seller_name varchar(50),
+    Business_Info Text
+)
+create table CUSTOMERS(
+    customer_ID INT primary key,
+    full_name varchar(50),
+    date_of_birth date,
+    email varchar(50),
+    phone_number varchar(15),
+    [address] Text
+)
+create table EMPLOYEES(
+    Employee_ID	INT	PRIMARY KEY,
+    Assigned_orders	INT,
+    Responsibility	VARCHAR(100),
+    Performance_rating	DECIMAL(3,2)
+)
+create table PRODUCTS(
+    ProductCode	INT PRIMARY KEY,
+    Product_Name	VARCHAR(50),
+    [Description]	VARCHAR(50),
+    PRICE 	VARCHAR(50),
+    source_ID INT FOREIGN KEY references SUPPLIERS(source_ID)
+)
+create table TRANSACTIONS(
+    Transaction_Date	DATE,
+    [Time]	TIME,
+    Amount	DECIMAL(10,2),
+    source_ID INT FOREIGN KEY references SUPPLIERS(source_ID)
+)
+create table ORDERS(
+    Order_ID	INT primary key,
+    Delivery_date	DATE,
+    Payment_status	VARCHAR(20),
+    customer_ID INT FOREIGN KEY references CUSTOMERS(customer_ID),
+    Seller_ID INT FOREIGN KEY references SELLERS(Seller_ID)
+)
+create table REPORT_MANAGEMENT(
+    Report_ID	INT	PRIMARY KEY,
+    Revenue	DECIMAL(10,2),
+    [Date]	DATE,
+    Delivery_performance	VARCHAR(50),
+    Order_status_summary	VARCHAR(100),
+    Employee_ID INT FOREIGN KEY references EMPLOYEES(Employee_ID)
+)
+create table [CONTAINS] (
+    Order_ID INT FOREIGN KEY references ORDERS(Order_ID),
+    ProductCode	INT FOREIGN KEY references PRODUCTS(ProductCode),
+    PRIMARY KEY (Order_ID,ProductCode)
+)
+create table transactions_import(
+    source_ID INT FOREIGN KEY references SUPPLIERS(source_ID),
+    Report_ID	INT FOREIGN KEY references REPORT_MANAGEMENT(Report_ID),
+    primary key (source_ID,Report_ID)
+)
+create table SHIPPING(
+    customer_ID INT FOREIGN KEY references CUSTOMERS(customer_ID),
+    Employee_ID INT FOREIGN KEY references EMPLOYEES(Employee_ID),
+    Primary key (Employee_ID,customer_ID)
+)
+create table Works_with(
+    Employee_ID INT FOREIGN KEY references EMPLOYEES(Employee_ID),
+    Seller_ID INT FOREIGN KEY references SELLERS(Seller_ID),
+    primary key (Seller_ID,Employee_ID)
+)
